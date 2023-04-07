@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Black Jack</title>
+</head>
+
+<body>
+  <h1>Black Jack</h1>
+  <table style="border-collapse: collapse; margin: 0 auto; text-align: left;">
+    <tr>
+      <td style="border: 1px solid black; padding: 10px;"><b>Dealer</b></td>
+      <td id="dealer-hand" style="border: 1px solid black; padding: 10px;" width=250></td>
+      <td id="dealer-total" style="border: 1px solid black; padding: 10px;" width=50>0</td>    
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 10px;"><b>Player</b></td>
+      <td id="player-hand" style="border: 1px solid black; padding: 10px;"></td>
+      <td id="player-total" style="border: 1px solid black; padding: 10px;">0</td>
+    </tr>
+  </table>
+  <br>
+  <button id="deal-button">Deal</button>
+  <button disabled id="hit-button" >Hit</button>
+  <button disabled id="stand-button" >Stand</button>
+  <button disabled id="doubledown-button" >Double Down</button>
+  <script src="script.js"></script>
+</body>
+
+</html>
