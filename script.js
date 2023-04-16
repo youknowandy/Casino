@@ -2,6 +2,10 @@ var dealButton = document.getElementById("deal-button");
 var hitButton = document.getElementById("hit-button");
 var standButton = document.getElementById("stand-button");
 var doubledownButton = document.getElementById("doubledown-button");
+var addfundsButton = document.getElementById("add-funds");
+var cashoutButton = document.getElementById("cash-out");
+var changebetButton = document.getElementById("change-bet");
+
 
 function Card(hidden = false) {
   const faces = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -85,38 +89,47 @@ function Hand(cardDisplayID, valueDisplayID) {
 }
 
 function Player() {
-  this.score = 0;
+  this.funds = 0;
+  this.bet = 0;
   this.doubledowned = false;
-  this.scoreDisplay = document.getElementById("player-score");
   this.hand = new Hand("player-hand", "player-total");
+  this.fundsDisplay = document.getElementById("funds");
+  this.playerbetDisplay = document.getElementById("player-bet");
   
   this.new_game = function() {
     this.doubledowned = false;
 	this.hand.reset();
+	this.funds -= this.bet;
+  this.refreshBetDisplay();
+  }
+  
+  this.refreshBetDisplay = function () {
+    this.fundsDisplay.textContent = `$${this.funds.toFixed(2)}`;
+    this.playerbetDisplay.textContent = `$${this.bet.toFixed(2)}`;
   }
   
   this.resolve_round = function() {
 	playertotal = this.hand.value;
 	dealertotal = dealer.hand.value;
-	winnings = 0;
+	winnings = 1; // assuming a push
 	
 	if (playertotal > 21 || (dealertotal > playertotal && dealertotal <= 21 )) {
 	  // Player loses if they bust of if they got less than the dealer and the dealer didn't bust
-	  winnings = -1;
+	  winnings = 0;
 	} else if (playertotal > dealertotal || dealertotal > 21) {
 	  // Player wins if they got more than the dealer or the dealer busts
 	  // Players wins 50% more if they got a Black Jack
-	  winnings = (playertotal == 21 && this.hand.cards.length == 2) ? 1.5 : 1;
+	  winnings = (playertotal == 21 && this.hand.cards.length == 2) ? 2.5 : 2;
 	}
 	
-	// Players win or loss doubles if they double downed
-	if (this.doubledowned) {
-	  winnings *= 2;
+	// Add the winnings to the total funds, adjust bet if double downed, and update the display
+	this.funds += winnings * this.bet;
+	if (player1.doubledowned) {
+	  player1.bet /= 2;
 	}
-	
-	// Add the winnings to the total score and update the display
-	this.score += winnings;
-	this.scoreDisplay.innerHTML = this.score;
+  player1.refreshBetDisplay();
+  
+  // Debug Results
 	console.log("dealer total = " + dealertotal + "; player total = " + playertotal + "; winnings = " + winnings + "; double downed = " + this.doubledowned)
   };
 
@@ -133,7 +146,14 @@ function Dealer() {
         dealer.hand.deal();
         setTimeout(iteration, 500);
       } else {
-        player1.resolve_round()
+        player1.resolve_round();
+		
+		// Re-enable between rounds buttons
+		addfundsButton.disabled = false;
+		if (player1.funds > 0) {
+	      cashoutButton.disabled = false;
+		}
+	    changebetButton.disabled = false;
         dealButton.disabled = false;
       }
     }
@@ -141,6 +161,9 @@ function Dealer() {
   }
 	
   this.disable_all_buttons = function () {
+    addfundsButton.disabled = true;
+	cashoutButton.disabled = true;
+	changebetButton.disabled = true;
 	dealButton.disabled = true;
 	hitButton.disabled = true;
     standButton.disabled = true;
@@ -150,6 +173,44 @@ function Dealer() {
 
 const player1 = new Player();
 const dealer = new Dealer();
+
+addfundsButton.addEventListener("click", function () {
+  // prompt the user for a number and convert to a float
+  const amount = parseFloat(prompt("Enter amount to add to funds:"));
+
+  // check if amount is valid
+  if (!isNaN(amount) && amount > 0) {
+    // update funds variable
+    player1.funds += amount;
+
+    // update funds display element and allow cash out
+    player1.refreshBetDisplay();
+	  cashoutButton.disabled = false;
+  } else {
+    alert("Invalid amount entered.");
+  }
+});
+
+cashoutButton.addEventListener("click", function () {
+  player1.funds = 0;
+  player1.refreshBetDisplay();
+});
+
+changebetButton.addEventListener("click", function () {
+  // prompt the user for a number and convert to a float
+  const amount = parseFloat(prompt("Enter amount to bet:"));
+
+  // check if amount is valid
+  if (!isNaN(amount) && amount > 0 && amount <= player1.funds) {
+    // update funds variable
+    player1.bet = amount;
+
+    // update funds display element
+    player1.refreshBetDisplay();
+  } else {
+    alert("Invalid amount entered.");
+  }
+});
 
 dealButton.addEventListener("click", function () {
   dealer.disable_all_buttons();
@@ -196,7 +257,15 @@ standButton.addEventListener("click", function () {
 
 doubledownButton.addEventListener("click", function () {
   dealer.disable_all_buttons();
+  
+  // double bets
   player1.doubledowned = true;
+  player1.funds -= player1.bet;
+  player1.bet *= 2;
+  player1.refreshBetDisplay();
+
+  
+  // deal one card to player and then resolve round
   player1.hand.deal();
   dealer.resolve_round();
 });
