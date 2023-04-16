@@ -2,9 +2,9 @@ var dealButton = document.getElementById("deal-button");
 var hitButton = document.getElementById("hit-button");
 var standButton = document.getElementById("stand-button");
 var doubledownButton = document.getElementById("doubledown-button");
-var addfundsButton = document.getElementById("add-funds");
-var cashoutButton = document.getElementById("cash-out");
-var changebetButton = document.getElementById("change-bet");
+var addfundsButton = document.getElementById("addfunds-button");
+var cashoutButton = document.getElementById("cashout-button");
+var changebetButton = document.getElementById("changebet-button");
 
 
 function Card(hidden = false) {
@@ -93,7 +93,7 @@ function Player() {
   this.bet = 0;
   this.doubledowned = false;
   this.hand = new Hand("player-hand", "player-total");
-  this.fundsDisplay = document.getElementById("funds");
+  this.fundsDisplay = document.getElementById("player-funds");
   this.playerbetDisplay = document.getElementById("player-bet");
   
   this.new_game = function() {
@@ -244,7 +244,7 @@ dealButton.addEventListener("click", function () {
 	// Enable all other buttons
     hitButton.disabled = false;
     standButton.disabled = false;
-    doubledownButton.disabled = false;
+    doubledownButton.disabled = player1.funds < player1.bet; // only allow if enough funds
   }, 1500);
 
 });
