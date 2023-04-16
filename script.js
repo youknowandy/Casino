@@ -122,12 +122,22 @@ function Player() {
 	  winnings = (playertotal == 21 && this.hand.cards.length == 2) ? 2.5 : 2;
 	}
 	
-	// Add the winnings to the total funds, adjust bet if double downed, and update the display
+	// Add the winnings to the total funds
 	this.funds += winnings * this.bet;
-	if (player1.doubledowned) {
-	  player1.bet /= 2;
+  
+  // Adjust Bet if Double Downed
+	if (this.doubledowned) {
+	  this.bet /= 2;
 	}
-  player1.refreshBetDisplay();
+  
+  // Set bet to 0 if amount left is below bet amount
+  if (this.funds < this.bet) {
+    this.bet = 0;
+  }
+  
+  // Update Display
+  this.refreshBetDisplay();
+  dealer.enable_betting_buttons();
   
   // Debug Results
 	console.log("dealer total = " + dealertotal + "; player total = " + playertotal + "; winnings = " + winnings + "; double downed = " + this.doubledowned)
@@ -147,29 +157,29 @@ function Dealer() {
         setTimeout(iteration, 500);
       } else {
         player1.resolve_round();
-		
-		// Re-enable between rounds buttons
-		addfundsButton.disabled = false;
-		if (player1.funds > 0) {
-	      cashoutButton.disabled = false;
-		}
-	    changebetButton.disabled = false;
-        dealButton.disabled = false;
-      }
+		  }
     }
     setTimeout(iteration, 1000);
   }
 	
   this.disable_all_buttons = function () {
     addfundsButton.disabled = true;
-	cashoutButton.disabled = true;
-	changebetButton.disabled = true;
-	dealButton.disabled = true;
-	hitButton.disabled = true;
+	  cashoutButton.disabled = true;
+	  changebetButton.disabled = true;
+	  dealButton.disabled = true;
+	  hitButton.disabled = true;
     standButton.disabled = true;
     doubledownButton.disabled = true; 
   }
+  
+  this.enable_betting_buttons = function () {
+    addfundsButton.disabled = false;
+    cashoutButton.disabled = player1.funds == 0;
+    changebetButton.disabled = player1.funds == 0;
+    dealButton.disabled = player1.bet == 0;
+  }
 }
+
 
 const player1 = new Player();
 const dealer = new Dealer();
@@ -185,7 +195,7 @@ addfundsButton.addEventListener("click", function () {
 
     // update funds display element and allow cash out
     player1.refreshBetDisplay();
-	  cashoutButton.disabled = false;
+	  dealer.enable_betting_buttons();
   } else {
     alert("Invalid amount entered.");
   }
@@ -193,7 +203,9 @@ addfundsButton.addEventListener("click", function () {
 
 cashoutButton.addEventListener("click", function () {
   player1.funds = 0;
+  player1.bet = 0;
   player1.refreshBetDisplay();
+  dealer.enable_betting_buttons();
 });
 
 changebetButton.addEventListener("click", function () {
@@ -210,6 +222,7 @@ changebetButton.addEventListener("click", function () {
   } else {
     alert("Invalid amount entered.");
   }
+  dealer.enable_betting_buttons();
 });
 
 dealButton.addEventListener("click", function () {
