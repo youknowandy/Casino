@@ -39,11 +39,13 @@ class TestDemo():
     value = self.driver.find_element(By.ID, "checkBox1").get_attribute("value")
     assert value == "on"
     print(value)
-    #element = self.driver.find_element(By.ID, "myFrame3")
-    #self.driver.switch_to.frame(element)
-    #self.driver.find_element(By.ID, "checkBox6").click()
-    #value = self.driver.find_element(By.ID, "checkBox6").get_attribute("value")
-    #assert value == "on"
+    element = self.driver.find_element(By.ID, "myFrame3")
+    self.driver.switch_to.frame(element)
+    self.driver.find_element(By.ID, "checkBox6").click()
+    value = self.driver.find_element(By.ID, "checkBox6").get_attribute("value")
+    assert value == "on"
+    print(value)
+    self.driver.switch_to.default_content()
   
   def subTest4Dropdown(self):
     # Test 4
