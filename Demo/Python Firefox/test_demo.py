@@ -19,17 +19,35 @@ class TestDemo():
     self.driver.quit()
   
   def subTest1Text(self):
+    # Test 1
+    # Sets the input box "myTextInput" box to "MAPS is boring" and then verifies that it contains the new value
     self.driver.find_element(By.ID, "myTextInput").send_keys("MAPS is boring")
     value = self.driver.find_element(By.ID, "myTextInput").get_attribute("value")
+    print(value)
     assert value == "MAPS is boring"
   
   def subTest2Color(self):
+    # Test 2
+    # Grabs the rgb color associated with "HTML SVG with rect", sets it to a variable and then prints it
     self.driver.find_element(By.ID, "svgRect").click()
     attribute = self.driver.find_element(By.ID, "svgRect").get_attribute("fill")
     self.vars["color"] = attribute
     print("{}".format(self.vars["color"]))
   
+  def subTest3Checkbox(self):
+    self.driver.find_element(By.ID, "checkBox1").click()
+    value = self.driver.find_element(By.ID, "checkBox1").get_attribute("value")
+    assert value == "on"
+    print(value)
+    #element = self.driver.find_element(By.ID, "myFrame3")
+    #self.driver.switch_to.frame(element)
+    #self.driver.find_element(By.ID, "checkBox6").click()
+    #value = self.driver.find_element(By.ID, "checkBox6").get_attribute("value")
+    #assert value == "on"
+  
   def subTest4Dropdown(self):
+    # Test 4
+    # Changes the "Select Dropdown" to "Set to 50%" and then asserts that the HTML meter changes to what was selected
     dropdown = self.driver.find_element(By.ID, "mySelect")
     dropdown.find_element(By.XPATH, "//option[. = 'Set to 50%']").click()
     self.driver.find_element(By.CSS_SELECTOR, "option:nth-child(2)").click()
@@ -41,7 +59,11 @@ class TestDemo():
   def test_demo(self):
     self.driver.get("https://seleniumbase.io/demo_page")
     self.driver.set_window_size(1012, 648)
+    
+    # Execute tests
     self.subTest1Text()
     self.subTest2Color()
+    self.subTest3Checkbox()
     self.subTest4Dropdown()
+    input("Test complete. Press Enter to close browser and exit test...")
   
