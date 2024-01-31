@@ -20,7 +20,7 @@ class TestDemo():
   
   def subTest1Text(self):
     # Test 1
-    # Sets the input box "myTextInput" box to "MAPS is boring" and then verifies that it contains the new value
+    # Assignment: Fill in the Text Input Field with "MAPS is boring" and verify it filled in correctly
     self.driver.find_element(By.ID, "myTextInput").send_keys("MAPS is boring")
     value = self.driver.find_element(By.ID, "myTextInput").get_attribute("value")
     print(value)
@@ -28,17 +28,15 @@ class TestDemo():
   
   def subTest2Color(self):
     # Test 2
-    # Grabs the rgb color associated with "HTML SVG with rect", sets it to a variable and then prints it
+    # Assignment: Grab the rgb color from "HTML SVG with rect" and populate a variable with the result.
     self.driver.find_element(By.ID, "svgRect").click()
     attribute = self.driver.find_element(By.ID, "svgRect").get_attribute("fill")
     self.vars["color"] = attribute
     print("{}".format(self.vars["color"]))
   
   def subTest3Checkbox(self):
-    self.driver.find_element(By.ID, "checkBox1").click()
-    value = self.driver.find_element(By.ID, "checkBox1").get_attribute("value")
-    assert value == "on"
-    print(value)
+    # Test 3
+    # Assignment: Toggle the CheckBox in the iFrame and confirm it is checked.
     element = self.driver.find_element(By.ID, "myFrame3")
     self.driver.switch_to.frame(element)
     self.driver.find_element(By.ID, "checkBox6").click()
@@ -49,7 +47,7 @@ class TestDemo():
   
   def subTest4Dropdown(self):
     # Test 4
-    # Changes the "Select Dropdown" to "Set to 50%" and then asserts that the HTML meter changes to what was selected
+    # Assignment: Change Select Dropdown to "Set to 50%" and Assert the HTML meter changes to what is selected.
     dropdown = self.driver.find_element(By.ID, "mySelect")
     dropdown.find_element(By.XPATH, "//option[. = 'Set to 50%']").click()
     self.driver.find_element(By.CSS_SELECTOR, "option:nth-child(2)").click()
