@@ -36,7 +36,7 @@ class TestDemo():
     attribute = self.driver.find_element(By.ID, "meterBar").get_attribute("value")
     self.vars["amountFilled"] = attribute
     print("{}".format(self.vars["amountFilled"]))
-    assert(self.vars["amountFilled"] == 0.5)
+    assert(self.vars["amountFilled"] == "0.5")
   
   def test_demo(self):
     self.driver.get("https://seleniumbase.io/demo_page")
