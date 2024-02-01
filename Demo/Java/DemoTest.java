@@ -37,14 +37,19 @@ public class DemoTest {
     driver.quit();
   }
   public void subTest1Text() {
+    // Test 1
+    // Assignment: Fill in the Text Input Field with "MAPS is boring" and verify it filled in correctly
     driver.findElement(By.id("myTextInput")).sendKeys("MAPS is boring");
     {
       String value = driver.findElement(By.id("myTextInput")).getAttribute("value");
+      System.out.println(value.toString());  
       assertThat(value, is("MAPS is boring"));
     }
   }
   public void subTest2Color() {
-    driver.findElement(By.id("svgRect")).click();
+    // Test 2
+    // Assignment: Grab the rgb color from "HTML SVG with rect" and populate a variable with the result.
+    //driver.findElement(By.id("svgRect")).click();
     {
       WebElement element = driver.findElement(By.id("svgRect"));
       String attribute = element.getAttribute("fill");
@@ -53,6 +58,8 @@ public class DemoTest {
     System.out.println(vars.get("color").toString());
   }
   public void subTest3Checkbox() {
+    // Test 3
+    // Assignment: Toggle the CheckBox in the iFrame and confirm it is checked.
     {
       WebElement element = driver.findElement(By.id("myFrame3"));
       driver.switchTo().frame(element);
@@ -60,11 +67,14 @@ public class DemoTest {
     driver.findElement(By.id("checkBox6")).click();
     {
       String value = driver.findElement(By.id("checkBox6")).getAttribute("value");
+      System.out.println(value.toString());  
       assertThat(value, is("on"));
     }
     driver.switchTo().defaultContent();
   }
   public void subTest4Dropdown() {
+    // Test 4
+    // Assignment: Change Select Dropdown to "Set to 50%" and Assert the HTML meter changes to what is selected.
     {
       WebElement dropdown = driver.findElement(By.id("mySelect"));
       dropdown.findElement(By.xpath("//option[. = 'Set to 50%']")).click();
